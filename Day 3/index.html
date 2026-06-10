@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f3f4f6;
+      }
+      h1 {
+        color: #1f2937;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 18px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="welcome-heading">Welcome to KRMU</h1>
+    <button id="change-button">Change</button>
+
+    <script>
+      const button = document.getElementById('change-button');
+      const heading = document.getElementById('welcome-heading');
+
+      button.addEventListener('click', () => {
+        heading.textContent = 'Welcome to Bootcamp';
+        heading.style.backgroundColor = 'tomato';
+        heading.style.color = '#ffffff';
+        heading.style.padding = '10px 20px';
+        heading.style.borderRadius = '8px';
+      });
+    </script>
+  </body>
+</html>
