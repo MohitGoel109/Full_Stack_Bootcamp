@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skyvault — Weather App</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      background: #0f172a;
+      color: #f1f5f9;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .app { width: 100%; max-width: 560px; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 2rem; }
+    .logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 6px; }
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, #378ADD, #5DCAA5);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon i { font-size: 26px; color: #fff; }
+    .logo-text { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; color: #f1f5f9; }
+    .logo-sub { font-size: 13px; color: #94a3b8; margin-top: 2px; }
+
+    /* Search */
+    .search-wrap { display: flex; gap: 8px; margin-bottom: 1rem; }
+    .search-wrap input {
+      flex: 1;
+      height: 48px;
+      border-radius: 12px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #f1f5f9;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-wrap input::placeholder { color: #64748b; }
+    .search-wrap input:focus {
+      border-color: #378ADD;
+      box-shadow: 0 0 0 3px rgba(55,138,221,0.2);
+    }
+    .search-wrap button {
+      height: 48px;
+      padding: 0 22px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #378ADD, #185FA5);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .search-wrap button:hover { opacity: 0.9; }
+    .search-wrap button:active { transform: scale(0.97); }
+    .search-wrap button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .error-msg { text-align: center; color: #f87171; font-size: 13px; min-height: 20px; margin-bottom: 1rem; }
+
+    /* Weather Card */
+    .weather-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .card-top {
+      padding: 2rem;
+      background: linear-gradient(160deg, #1a5f9e 0%, #0f8a6e 100%);
+      position: relative;
+    }
+    .city-row { display: flex; align-items: flex-start; justify-content: space-between; }
+    .city-name { font-size: 28px; font-weight: 600; color: #fff; }
+    .country { font-size: 14px; color: rgba(255,255,255,0.75); margin-top: 3px; }
+    .date-time { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 3px; }
+    .weather-icon-big { font-size: 68px; line-height: 1; }
+
+    .main-temp { display: flex; align-items: flex-start; gap: 6px; margin: 1.5rem 0 0.5rem; }
+    .temp-big { font-size: 80px; font-weight: 300; color: #fff; line-height: 1; }
+    .temp-unit { font-size: 32px; color: rgba(255,255,255,0.65); margin-top: 10px; }
+    .weather-desc { font-size: 17px; color: rgba(255,255,255,0.9); text-transform: capitalize; margin-bottom: 0.5rem; }
+    .feels-like { font-size: 13px; color: rgba(255,255,255,0.65); }
+
+    /* Metrics */
+    .card-bottom { padding: 1.5rem 2rem; }
+    .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.25rem; }
+    .metric {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+    }
+    .metric-label { font-size: 11px; color: #64748b; display: flex; align-items: center; gap: 5px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .metric-label i { font-size: 14px; color: #378ADD; }
+    .metric-value { font-size: 20px; font-weight: 600; color: #f1f5f9; }
+    .metric-unit { font-size: 12px; color: #64748b; font-weight: 400; }
+    .wind-dir { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+    .divider { height: 1px; background: #334155; margin-bottom: 1.25rem; }
+
+    .extra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .extra-item { display: flex; align-items: center; gap: 12px; }
+    .extra-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .extra-icon i { font-size: 18px; color: #5DCAA5; }
+    .extra-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+    .extra-val { font-size: 14px; font-weight: 600; color: #f1f5f9; margin-top: 2px; }
+
+    /* Placeholder */
+    .placeholder { text-align: center; padding: 4rem 1rem; }
+    .placeholder i { font-size: 60px; color: #334155; display: block; margin-bottom: 1rem; }
+    .placeholder p { font-size: 15px; color: #64748b; }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .temp-big { font-size: 64px; }
+      .city-name { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon"><i class="ti ti-cloud-storm"></i></div>
+      <span class="logo-text">Skyvault</span>
+    </div>
+    <div class="logo-sub">Real-time weather, anywhere on Earth</div>
+  </div>
+
+  <div class="search-wrap">
+    <input type="text" id="cityInput" placeholder="Enter a city name…" autocomplete="off" />
+    <button id="searchBtn" onclick="fetchWeather()">
+      <i class="ti ti-search"></i> Search
+    </button>
+  </div>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div id="weatherResult">
+    <div class="placeholder">
+      <i class="ti ti-world"></i>
+      <p>Search for a city to see its current weather</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const API_KEY = '26875cd5ee552d11c5335b277a3fbfbc';
+
+  document.getElementById('cityInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') fetchWeather();
+  });
+
+  function getWeatherEmoji(id, icon) {
+    const isNight = icon && icon.endsWith('n');
+    if (id >= 200 && id < 300) return '⛈️';
+    if (id >= 300 && id < 400) return '🌦️';
+    if (id >= 500 && id < 600) return id < 502 ? '🌧️' : '⛈️';
+    if (id >= 600 && id < 700) return '❄️';
+    if (id >= 700 && id < 800) return '🌫️';
+    if (id === 800) return isNight ? '🌙' : '☀️';
+    if (id === 801) return isNight ? '🌙' : '🌤️';
+    if (id >= 802) return '☁️';
+    return '🌡️';
+  }
+
+  function getWindDir(deg) {
+    const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+    return dirs[Math.round(deg / 45) % 8];
+  }
+
+  function formatLocalTime(unixTs, offsetSec) {
+    const d = new Date((unixTs + offsetSec) * 1000);
+    return d.toUTCString().replace('GMT', '').split(' ').slice(0, 4).join(' ');
+  }
+
+  function formatSunTime(unixTs, offsetSec) {
+    const d = new Date((unixTs + offsetSec) * 1000);
+    const h = d.getUTCHours(), m = d.getUTCMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${ampm}`;
+  }
+
+  async function fetchWeather() {
+    const city = document.getElementById('cityInput').value.trim();
+    if (!city) return;
+
+    const btn = document.getElementById('searchBtn');
+    const err = document.getElementById('errorMsg');
+    const result = document.getElementById('weatherResult');
+
+    err.textContent = '';
+    btn.innerHTML = '<span class="spinner"></span>';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`
+      );
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.message || 'City not found');
+      }
+      const d = await res.json();
+
+      const emoji     = getWeatherEmoji(d.weather[0].id, d.weather[0].icon);
+      const localTime = formatLocalTime(d.dt, d.timezone);
+      const sr        = formatSunTime(d.sys.sunrise, d.timezone);
+      const ss        = formatSunTime(d.sys.sunset, d.timezone);
+      const visKm     = d.visibility ? (d.visibility / 1000).toFixed(1) : 'N/A';
+      const windKmh   = Math.round(d.wind.speed * 3.6);
+      const windDir   = d.wind.deg !== undefined ? getWindDir(d.wind.deg) : '';
+
+      result.innerHTML = `
+        <div class="weather-card">
+          <div class="card-top">
+            <div class="city-row">
+              <div>
+                <div class="city-name">${d.name}</div>
+                <div class="country">${d.sys.country}</div>
+                <div class="date-time">${localTime}</div>
+              </div>
+              <div class="weather-icon-big">${emoji}</div>
+            </div>
+            <div class="main-temp">
+              <div class="temp-big">${Math.round(d.main.temp)}</div>
+              <div class="temp-unit">°C</div>
+            </div>
+            <div class="weather-desc">${d.weather[0].description}</div>
+            <div class="feels-like">
+              Feels like ${Math.round(d.main.feels_like)}°C &nbsp;·&nbsp;
+              ${d.main.temp_min.toFixed(1)}° / ${d.main.temp_max.toFixed(1)}°
+            </div>
+          </div>
+
+          <div class="card-bottom">
+            <div class="metrics-grid">
+              <div class="metric">
+                <div class="metric-label"><i class="ti ti-droplet"></i>Humidity</div>
+                <div class="metric-value">${d.main.humidity}<span class="metric-unit">%</span></div>
+              </div>
+              <div class="metric">
+                <div class="metric-label"><i class="ti ti-wind"></i>Wind</div>
+                <div class="metric-value">${windKmh}<span class="metric-unit"> km/h</span></div>
+                <div class="wind-dir">${windDir}</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label"><i class="ti ti-gauge"></i>Pressure</div>
+                <div class="metric-value">${d.main.pressure}<span class="metric-unit"> hPa</span></div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="extra-grid">
+              <div class="extra-item">
+                <div class="extra-icon"><i class="ti ti-eye"></i></div>
+                <div>
+                  <div class="extra-label">Visibility</div>
+                  <div class="extra-val">${visKm} km</div>
+                </div>
+              </div>
+              <div class="extra-item">
+                <div class="extra-icon"><i class="ti ti-cloud"></i></div>
+                <div>
+                  <div class="extra-label">Cloud cover</div>
+                  <div class="extra-val">${d.clouds.all}%</div>
+                </div>
+              </div>
+              <div class="extra-item">
+                <div class="extra-icon"><i class="ti ti-sunrise"></i></div>
+                <div>
+                  <div class="extra-label">Sunrise</div>
+                  <div class="extra-val">${sr}</div>
+                </div>
+              </div>
+              <div class="extra-item">
+                <div class="extra-icon"><i class="ti ti-sunset"></i></div>
+                <div>
+                  <div class="extra-label">Sunset</div>
+                  <div class="extra-val">${ss}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+
+    } catch (e) {
+      err.textContent = e.message.charAt(0).toUpperCase() + e.message.slice(1) + '. Try another city name.';
+      result.innerHTML = `
+        <div class="placeholder">
+          <i class="ti ti-map-off"></i>
+          <p>No results found</p>
+        </div>`;
+    } finally {
+      btn.innerHTML = '<i class="ti ti-search"></i> Search';
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
