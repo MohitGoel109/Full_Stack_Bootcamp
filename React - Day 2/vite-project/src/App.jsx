@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import Home from './Home'
-
+import MultiForm from './MultiForm'
 const App = () => {
 
   const[count,setCount] = useState(0)
@@ -20,6 +20,7 @@ const App = () => {
     <button onClick={handledClick}>Decrement</button>
     <button onClick={()=>setCount(0)}>Reset</button>
     <Home />
+    <MultiForm />
     </>
   )
 }
