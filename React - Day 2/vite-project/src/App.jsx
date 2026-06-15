@@ -1,27 +1,48 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import Home from './Home'
+import Toggle from './Toggle'
+import InputExample from './InputExample'
+import ShowHide from './ShowHide'
 import MultiForm from './MultiForm'
+import Counter from './Counter'
+
 const App = () => {
 
-  const[count,setCount] = useState(0)
-  const handleClick = () => {
-    console.log("Clicked")
-  setCount(count + 1)
+  const [count, setCount] = useState(0)
+
+  const handleIncrement = () => {
+    setCount(prev => prev + 1)
   }
-  const handledClick = () => {
-    console.log("Clicked")
-  setCount(count - 1)
+
+  const handleDecrement = () => {
+    setCount(prev => prev - 1)
   }
+
+  const handleReset = () => {
+    setCount(0)
+  }
+
   return (
-    <>
-    <div><h1>App</h1></div>
-    <h1>{count}</h1>
-    <button onClick={handleClick}>Increment</button>
-    <button onClick={handledClick}>Decrement</button>
-    <button onClick={()=>setCount(0)}>Reset</button>
-    <Home />
-    <MultiForm />
-    </>
+    <div style={{ textAlign: "center", padding: "20px" }}>
+      
+      <h1>App</h1>
+
+      <h2>{count}</h2>
+
+      <div style={{ marginBottom: "20px" }}>
+        <button onClick={handleIncrement}>Increment</button>
+        <button onClick={handleDecrement}>Decrement</button>
+        <button onClick={handleReset}>Reset</button>
+      </div>
+
+      <Home />
+      <Counter />
+      <Toggle />
+      <InputExample />
+      <ShowHide />
+      <MultiForm />
+
+    </div>
   )
 }
 
