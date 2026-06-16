@@ -1,5 +1,6 @@
 import React from 'react'
 
+const liked = () => {
   const [liked, setLiked] = useState(false);
 
   return (
@@ -9,6 +10,6 @@ import React from 'react'
       </button>
     </div>
   );
-
+}
 
 export default liked
