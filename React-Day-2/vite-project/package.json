@@ -2,7 +2,7 @@
   "name": "vite-project",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://mohitgoel109.github.io/Full_Stack_Bootcamp/React-Day2/vite-project",
+  "homepage": "https://mohitgoel109.github.io/Full_Stack_Bootcamp/React-Day-2/vite-project",
   "type": "module",
   "scripts": {
     "dev": "vite",
