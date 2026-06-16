@@ -2,14 +2,13 @@
   "name": "vite-project",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://mohitgoel109.github.io/Full_Stack_Bootcamp/react-day-2",
+  "homepage": "https://MohitGoel109.github.io/Full_Stack_Bootcamp",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist -e react-day-2",
-    "lint": "eslint .",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -17,14 +16,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^6.0.1",
-    "eslint": "^10.3.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "gh-pages": "^6.3.0",
-    "vite": "^8.0.12"
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^5.0.0",
+    "gh-pages": "^6.1.1"
   }
 }
