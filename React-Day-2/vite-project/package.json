@@ -2,13 +2,13 @@
   "name": "vite-project",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://mohitgoel109.github.io/Full_Stack_Bootcamp/React-Day-2/vite-project",
+  "homepage": "https://mohitgoel109.github.io/Full_Stack_Bootcamp/react-day-2",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
+    "deploy": "gh-pages -d dist -e react-day-2",
     "lint": "eslint .",
     "preview": "vite preview"
   },
