@@ -1,13 +1,84 @@
-button {
-  margin: 5px;
-  padding: 10px 15px;
-  border: none;
-  background: #3b82f6;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #0f172a, #020617);
   color: white;
-  border-radius: 6px;
+}
+
+/* MAIN WRAPPER */
+.main-wrapper {
+  padding: 30px;
+}
+
+/* HEADER STYLE (Day 2 apps usually have headings) */
+h1, h2, h3 {
+  text-align: center;
+}
+
+/* CARD STYLE (important for Day 2 projects) */
+.card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  padding: 18px;
+  border-radius: 14px;
+  transition: all 0.3s ease;
+  margin: 10px 0;
+}
+
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* BUTTON UPGRADE */
+button {
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  border: none;
+  padding: 10px 16px;
+  color: white;
+  border-radius: 10px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 button:hover {
-  background: #1d4ed8;
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* INPUT UPGRADE (if your Day 2 has forms) */
+input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05);
+  color: white;
+  outline: none;
+  margin: 5px;
+}
+
+input:focus {
+  border-color: #3b82f6;
+}
+
+/* FLEX HELPERS */
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* GRID (for lists/cards in Day 2 projects) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
 }
