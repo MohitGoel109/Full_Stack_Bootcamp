@@ -5,7 +5,8 @@ const ShowHide = () => {
 
   return (
     <div>
-      <button onClick={() => setShow(!show)}>Toggle Text</button>
+      <div className="eyebrow">SYS.05_VISIBILITY</div>
+      <button className="btn btn-ghost" onClick={() => setShow(!show)}>Toggle Text</button>
       {show && <p>This text is visible</p>}
     </div>
   );

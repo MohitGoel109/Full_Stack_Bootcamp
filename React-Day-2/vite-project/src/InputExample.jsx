@@ -5,6 +5,7 @@ const InputExample = () => {
 
   return (
     <div>
+      <div className="eyebrow">SYS.03_INPUT</div>
       <input
         type="text"
         placeholder="Type something"

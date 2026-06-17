@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 
 const MultiForm = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +18,8 @@ const MultiForm = () => {
 
   return (
     <>
+      <div className="eyebrow">SYS.06_FORM</div>
+
       <input
         type="text"
         name="name"
@@ -42,7 +44,7 @@ const MultiForm = () => {
         onChange={handleChange}
       />
 
-      <h3>{JSON.stringify(formData)}</h3>
+      <h3 style={{ color: "var(--neon-cyan)", marginTop: "12px", fontSize: "13px" }}>{JSON.stringify(formData)}</h3>
     </>
   );
 }

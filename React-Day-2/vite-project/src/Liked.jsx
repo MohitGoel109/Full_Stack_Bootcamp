@@ -1,11 +1,12 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 
 const liked = () => {
   const [liked, setLiked] = useState(false);
 
   return (
     <div>
-      <button onClick={() => setLiked(!liked)}>
+      <div className="eyebrow">SYS.04_LIKE</div>
+      <button className="btn btn-ghost" onClick={() => setLiked(!liked)}>
         {liked ? "❤️ Liked" : "🤍 Like"}
       </button>
     </div>

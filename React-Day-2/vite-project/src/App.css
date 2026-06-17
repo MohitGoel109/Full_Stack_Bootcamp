@@ -1,84 +1,134 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --void: #05060a;
+  --panel: #0b0e14;
+  --panel-2: #10141d;
+  --line: rgba(10, 255, 157, 0.18);
+
+  --neon-green: #0aff9d;
+  --neon-magenta: #ff2e6d;
+  --neon-cyan: #00d9ff;
+
+  --text-main: #e8ecf4;
+  --text-mute: #8b93a7;
+
+  --font-display: 'JetBrains Mono', monospace;
+  --font-body: 'Inter', sans-serif;
+  --container: 1180px;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  color: white;
+  background: var(--void);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* MAIN WRAPPER */
-.main-wrapper {
-  padding: 30px;
+.grid-backdrop {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(10,255,157,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,255,157,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 75%);
 }
 
-/* HEADER STYLE (Day 2 apps usually have headings) */
-h1, h2, h3 {
-  text-align: center;
+.scanlines {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: repeating-linear-gradient(to bottom,
+    rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px,
+    transparent 1px, transparent 3px);
+  opacity: 0.5;
 }
 
-/* CARD STYLE (important for Day 2 projects) */
-.card {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(14px);
-  padding: 18px;
-  border-radius: 14px;
-  transition: all 0.3s ease;
-  margin: 10px 0;
+.noise-vignette {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse 90% 70% at 50% 30%, transparent 40%, rgba(0,0,0,0.65) 100%);
 }
 
-.card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: 0.02em; font-weight: 700; line-height: 1.15; }
+p { color: var(--text-mute); line-height: 1.7; }
+a { color: var(--neon-cyan); text-decoration: none; }
+
+.section { max-width: var(--container); margin: 0 auto; padding: 100px 32px; position: relative; }
+
+.flex { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-size: 12px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--neon-green); margin-bottom: 14px;
+}
+.eyebrow::before {
+  content: ''; width: 8px; height: 8px; background: var(--neon-green);
+  box-shadow: 0 0 8px var(--neon-green), 0 0 16px var(--neon-green); display: inline-block;
 }
 
-/* BUTTON UPGRADE */
-button {
-  background: linear-gradient(135deg, #6366f1, #3b82f6);
-  border: none;
-  padding: 10px 16px;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after {
+  content: attr(data-text); position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%; opacity: 0;
+}
+.glitch:hover::before {
+  opacity: 0.8; color: var(--neon-magenta); transform: translate(-2px, 1px);
+  clip-path: polygon(0 10%, 100% 10%, 100% 40%, 0 40%);
+  animation: glitch-flicker 0.35s steps(2, end) infinite;
+}
+.glitch:hover::after {
+  opacity: 0.8; color: var(--neon-cyan); transform: translate(2px, -1px);
+  clip-path: polygon(0 60%, 100% 60%, 100% 90%, 0 90%);
+  animation: glitch-flicker 0.4s steps(2, end) infinite reverse;
+}
+@keyframes glitch-flicker {
+  0% { transform: translate(-2px, 1px); }
+  50% { transform: translate(2px, -1px); }
+  100% { transform: translate(-1px, 2px); }
 }
 
-button:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
+.btn {
+  font-family: var(--font-display); font-size: 13px; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 12px 24px; border-radius: 2px;
+  cursor: pointer; transition: all 0.2s ease; margin: 4px;
+}
+.btn-primary { background: var(--neon-green); color: #001b10; border: 1px solid var(--neon-green); }
+.btn-primary:hover { box-shadow: 0 0 24px rgba(10,255,157,0.55); transform: translateY(-2px); }
+.btn-ghost { background: transparent; color: var(--text-main); border: 1px solid rgba(255,255,255,0.18); }
+.btn-ghost:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+
+.panel {
+  background: linear-gradient(160deg, var(--panel), var(--panel-2));
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; position: relative;
+}
+.panel::before {
+  content: ''; position: absolute; top: -1px; left: -1px; width: 18px; height: 18px;
+  border-top: 2px solid var(--neon-green); border-left: 2px solid var(--neon-green);
+}
+.panel::after {
+  content: ''; position: absolute; bottom: -1px; right: -1px; width: 18px; height: 18px;
+  border-bottom: 2px solid var(--neon-green); border-right: 2px solid var(--neon-green);
 }
 
-/* INPUT UPGRADE (if your Day 2 has forms) */
 input {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.05);
-  color: white;
+  font-family: var(--font-body);
+  padding: 10px 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-main);
   outline: none;
-  margin: 5px;
+  margin: 6px;
 }
+input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 8px rgba(0,217,255,0.3); }
+input::placeholder { color: var(--text-mute); }
 
-input:focus {
-  border-color: #3b82f6;
-}
+::selection { background: var(--neon-green); color: #001b10; }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: rgba(10,255,157,0.35); }
 
-/* FLEX HELPERS */
-.flex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* GRID (for lists/cards in Day 2 projects) */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-}
+@media (max-width: 768px) { .section { padding: 70px 20px; } }
