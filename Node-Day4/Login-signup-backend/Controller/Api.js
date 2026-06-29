@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const saltRound = 10;
-const secretKey = "acharya";
+const secretKey = "mohit";
 // console.log(secretKey)
 const jwt = require("jsonwebtoken");
 // const auth = require('../Middleware/auth')

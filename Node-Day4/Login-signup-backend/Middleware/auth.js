@@ -1,7 +1,7 @@
 
 
 const jwt  = require('jsonwebtoken')
-const secretKey = 'acharya'
+const secretKey = 'mohit'
 
 const auth  = (req,res,next)=>{
 
