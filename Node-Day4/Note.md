@@ -1,5 +1,11 @@
 # Node.js Day 4 — Login & Signup with JWT Auth
 
+## 🚀 Live Demo
+- **Frontend (Vercel)** → https://full-stack-bootcamp-nine.vercel.app/login
+- **Backend (Render)** → https://auth-backend-vtsx.onrender.com
+
+---
+
 ## Topics Covered
 - User Registration with bcrypt password hashing
 - User Login with JWT token generation
