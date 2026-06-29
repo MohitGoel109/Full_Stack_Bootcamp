@@ -1,21 +1,22 @@
-// bcrypt dotenv jsonwebtoken express nodemon cors
-
-const express= require('express')
+const express = require('express')
 const app = express()
 const routes = require('./Routes/UserRoutes');
 const cors = require('cors')
 
 app.use(cors({
-    origin:'*'
+  origin: '*',
+  credentials: true
 }))
 
-app.use(express.json())  //body-parser
-// app.use(express.urlencoded({extended:true}));
-app.get("/",(req,res)=>{
-    res.send("Backend is working ")
-})
-app.use('/pages',routes)
+app.use(express.json())
 
-app.listen(8888,()=>{
-    console.log("Server is running fine at 8888")
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running", status: "ok" })
+})
+
+app.use('/pages', routes)
+
+const PORT = process.env.PORT || 8888
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
