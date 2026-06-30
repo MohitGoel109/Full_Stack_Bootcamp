@@ -107,9 +107,14 @@ use("company")
 //     { $sort: { Salary: -1 } },
 //     {$project: {name:1, empid:1, Salary:1, bonus:1, totalCompensation: {$add:["$Salary", "$bonus"]}}}])
 
+// db.employee.aggregate([
+//     { $group: { 
+//         _id: "$department", 
+//         totalSalary: { $sum: { $add: ["$Salary", "$bonus"] } }
+//     } }
+// ])
+
 db.employee.aggregate([
     { $group: { 
-        _id: "$department", 
-        totalSalary: { $sum: { $add: ["$Salary", "$bonus"] } }
-    } }
-])
+        "_id": null, 
+        "totalSalary": { $sum: { $add: ["$Salary", "$bonus"] } } } }])
