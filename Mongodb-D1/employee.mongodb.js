@@ -114,7 +114,7 @@ use("company")
 //     } }
 // ])
 
-db.employee.aggregate([
-    { $group: { 
-        "_id": null, 
-        "totalSalary": { $sum: { $add: ["$Salary", "$bonus"] } } } }])
+// db.employee.aggregate([
+//     { $group: { 
+//         "_id": null, 
+//         "totalSalary": { $sum: { $add: ["$Salary", "$bonus"] } } } }])
