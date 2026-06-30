@@ -121,5 +121,5 @@ use("company")
 
 // indexes
 // db.employee.find({empid: 105})
-// db.employee.getIndexes()
-db.employee.createIndex({empid: 1})
+db.employee.getIndexes()
+// db.employee.createIndex({empid: 1})
