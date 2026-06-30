@@ -53,8 +53,8 @@ use("company")
 //db.employee.find().skip(2).limit(2)
 
 //////////////// 3. Update salary of an employee with specific empid
-db.employee.updateOne({"empid": 103}, {$set: {"Salary": 70000}})
+//db.employee.updateOne({"empid": 103}, {$set: {"Salary": 70000}})
 
-//////////////// delete (optional reference, not part of task)
+//////////////// delete
 //db.employee.deleteOne({"empid":101})
 //db.employee.deleteMany({"department":"IT"})
