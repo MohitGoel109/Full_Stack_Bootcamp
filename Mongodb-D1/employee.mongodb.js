@@ -120,4 +120,5 @@ use("company")
 //         "totalSalary": { $sum: { $add: ["$Salary", "$bonus"] } } } }])
 
 // indexes
-db.employee.find({empid: 105})
+// db.employee.find({empid: 105})
+db.employee.getIndexes()
