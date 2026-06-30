@@ -118,3 +118,6 @@ use("company")
 //     { $group: { 
 //         "_id": null, 
 //         "totalSalary": { $sum: { $add: ["$Salary", "$bonus"] } } } }])
+
+// indexes
+db.employee.find({empid: 105})
