@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced AI Workflows // Interactive Field Notes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0e14; --bg-panel:#10151f; --bg-code:#0d1117; --border:#1c2432;
+    --text:#e6e8eb; --text-dim:#7c8797;
+    --cyan:#00d9ff; --amber:#ffb454; --green:#7fe08c; --pink:#ff6b9d; --violet:#b18cff; --blue:#5b9dff;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:
+      radial-gradient(ellipse 900px 500px at 15% -5%, rgba(0,217,255,0.07), transparent),
+      radial-gradient(ellipse 700px 500px at 100% 20%, rgba(177,140,255,0.06), transparent), var(--bg);
+    color:var(--text); font-family:'Inter',sans-serif; line-height:1.65;
+  }
+  code,.mono,pre{ font-family:'JetBrains Mono', monospace; }
+
+  .titlebar{ display:flex; align-items:center; gap:10px; padding:10px 24px; border-bottom:1px solid var(--border);
+    background:rgba(13,17,23,0.7); position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); }
+  .dot{width:11px;height:11px;border-radius:50%;} .dot.r{background:#ff5f57;} .dot.y{background:#febc2e;} .dot.g{background:#28c840;}
+  .titlebar span.path{margin-left:14px; color:var(--text-dim); font-size:13px; font-family:'JetBrains Mono';}
+
+  .hero{ max-width:1000px; margin:0 auto; padding:60px 24px 20px; }
+  .eyebrow{ font-family:'JetBrains Mono'; font-size:12.5px; color:var(--cyan); letter-spacing:2px; text-transform:uppercase; display:flex; align-items:center; gap:10px; }
+  .eyebrow::before{content:"$"; color:var(--green);}
+  .hero h1{ font-size:40px; line-height:1.15; margin:16px 0 12px; font-weight:800;
+    background:linear-gradient(100deg,#fff 30%, var(--cyan) 75%, var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p.sub{ color:var(--text-dim); font-size:16px; max-width:700px; }
+  .hero p.sub b{color:var(--text); font-weight:600;}
+
+  .legend{ max-width:1000px; margin:20px auto 0; padding:0 24px; display:flex; flex-wrap:wrap; gap:8px; }
+  .legend span{ font-family:'JetBrains Mono'; font-size:11.5px; background:var(--bg-panel); border:1px solid var(--border); padding:5px 10px; border-radius:20px; color:var(--text-dim); }
+
+  .tabnav{ max-width:1000px; margin:26px auto 0; padding:0 24px; display:flex; gap:6px; flex-wrap:wrap; border-bottom:1px solid var(--border); }
+  .tabnav a{ font-family:'JetBrains Mono'; font-size:12.5px; color:var(--text-dim); text-decoration:none; padding:11px 12px; border-bottom:2px solid transparent; transition:.15s; }
+  .tabnav a:hover{ color:var(--text); border-color:var(--cyan);} .tabnav a b{color:var(--amber); font-weight:700;}
+
+  .module{ max-width:1000px; margin:0 auto; padding:56px 24px 10px; }
+  .modhead{ display:flex; align-items:baseline; gap:14px; margin-bottom:6px;}
+  .modnum{ font-family:'JetBrains Mono'; font-size:14px; color:var(--bg); background:var(--accent,var(--cyan)); padding:2px 9px; border-radius:4px; font-weight:700; }
+  .module h2{ font-size:26px; margin:0; font-weight:800; }
+  .module .tagline{ color:var(--text-dim); font-size:14.5px; margin:6px 0 26px; }
+
+  /* ---- tag box system (Problem / Solution / Visual / Industry / Workflow / Code / Interview / Challenge) ---- */
+  .tbox{ border-radius:10px; padding:18px 22px; margin:16px 0; border-left:4px solid var(--c); background:rgba(var(--cr),0.055); }
+  .tbox .lbl{ font-family:'JetBrains Mono'; font-size:12px; font-weight:700; letter-spacing:1px; color:var(--c); margin-bottom:8px; display:flex; align-items:center; gap:7px;}
+  .tbox p{ margin:0; font-size:14.7px; }
+  .tbox p + p{ margin-top:8px; }
+
+  .t-problem{ --c:var(--pink); --cr:255,107,157; }
+  .t-solution{ --c:var(--green); --cr:127,224,140; }
+  .t-visual{ --c:var(--cyan); --cr:0,217,255; }
+  .t-industry{ --c:var(--amber); --cr:255,180,84; }
+  .t-workflow{ --c:var(--violet); --cr:177,140,255; }
+  .t-code{ --c:var(--blue); --cr:91,157,255; }
+  .t-interview{ --c:var(--violet); --cr:177,140,255; }
+  .t-challenge{ --c:var(--pink); --cr:255,107,157; }
+
+  pre.ascii{
+    background:var(--bg-code); border:1px solid var(--border); border-radius:10px;
+    padding:16px 20px; margin:0; font-size:13px; line-height:1.85; overflow-x:auto; text-align:center;
+  }
+  pre.ascii .step{ color:var(--text); }
+  pre.ascii .arrow{ color:var(--text-dim); }
+  pre.ascii .hi{ color:var(--cyan); font-weight:700; }
+  pre.ascii .hi2{ color:var(--green); font-weight:700; }
+  pre.ascii .hi3{ color:var(--pink); font-weight:700; }
+  pre.ascii .dim{ color:var(--text-dim); }
+
+  pre.codeblk{
+    background:var(--bg-code); border:1px solid var(--border); border-radius:10px;
+    padding:16px 20px; margin:0; font-size:13px; overflow-x:auto;
+  }
+  .c-key{color:var(--violet);} .c-str{color:var(--green);} .c-com{color:var(--text-dim); font-style:italic;} .c-fn{color:var(--cyan);}
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  @media(max-width:760px){ .grid2,.grid3{grid-template-columns:1fr;} .hero h1{font-size:29px;} }
+
+  .card{ background:var(--bg-panel); border:1px solid var(--border); border-radius:10px; padding:22px 24px; margin:16px 0; }
+  .card h3{ margin-top:0; font-size:16.5px; }
+
+  .interview-box{ background:var(--bg-panel); border:1px solid var(--violet); border-radius:10px; padding:20px 24px; margin:20px 0; }
+  .interview-box .lbl{ font-family:'JetBrains Mono'; font-size:12px; color:var(--violet); font-weight:700; letter-spacing:1px; margin-bottom:10px; }
+  .interview-box ul{ list-style:none; padding:0; margin:0; }
+  .interview-box li{ padding:7px 0; font-size:14.5px; border-bottom:1px dashed var(--border); }
+  .interview-box li:last-child{ border-bottom:none; }
+  .interview-box li::before{ content:"✅ "; }
+
+  .challenge-box{ background:linear-gradient(135deg, rgba(255,107,157,0.08), rgba(255,180,84,0.05)); border:1px solid var(--pink); border-radius:12px; padding:22px 26px; margin:20px 0; }
+  .challenge-box .lbl{ font-family:'JetBrains Mono'; font-size:12.5px; color:var(--pink); font-weight:700; letter-spacing:1px; margin-bottom:10px; }
+  .challenge-box ul.req{ list-style:none; padding:0; margin:12px 0; }
+  .challenge-box ul.req li{ padding:5px 0 5px 26px; position:relative; font-size:14.5px; }
+  .challenge-box ul.req li::before{ content:"✓"; position:absolute; left:0; color:var(--green); font-weight:700; }
+
+  /* thinking animation (replaces a GIF) */
+  .thinking{ display:flex; align-items:center; justify-content:center; gap:14px; padding:22px; background:var(--bg-code); border:1px solid var(--border); border-radius:10px; font-family:'JetBrains Mono'; font-size:13.5px; color:var(--cyan); }
+  .thinking .dots span{ display:inline-block; width:8px; height:8px; margin:0 3px; border-radius:50%; background:var(--cyan); animation:pulse 1.2s infinite ease-in-out; }
+  .thinking .dots span:nth-child(2){ animation-delay:.2s; background:var(--green);}
+  .thinking .dots span:nth-child(3){ animation-delay:.4s; background:var(--violet);}
+  @keyframes pulse{ 0%,80%,100%{ transform:scale(0.6); opacity:.4;} 40%{ transform:scale(1.15); opacity:1;} }
+  .robot{ font-size:22px; animation:bob 1.6s infinite ease-in-out; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-5px);} }
+
+  /* embedding scatter */
+  .scatter-cap{ text-align:center; font-family:'JetBrains Mono'; font-size:11.5px; color:var(--text-dim); margin-top:6px; }
+
+  /* interactive demo */
+  .demo-box{ background:var(--bg-panel); border:1px solid var(--border); border-radius:12px; padding:24px; margin:20px 0; text-align:center; }
+  .demo-btn{ font-family:'JetBrains Mono'; font-size:14px; font-weight:700; color:var(--bg); background:var(--cyan); border:none; padding:12px 26px; border-radius:8px; cursor:pointer; transition:.15s; }
+  .demo-btn:hover{ background:#5eeaff; transform:translateY(-1px); }
+  .demo-steps{ margin-top:22px; text-align:left; max-width:420px; margin-left:auto; margin-right:auto; }
+  .demo-step{ opacity:0; transform:translateX(-10px); transition:all .4s ease; padding:10px 16px; margin:6px 0; border-radius:8px; background:var(--bg-code); border:1px solid var(--border); font-family:'JetBrains Mono'; font-size:13px; }
+  .demo-step.show{ opacity:1; transform:translateX(0); border-color:var(--cyan); }
+  .demo-step.done{ border-color:var(--green); color:var(--green); }
+
+  .toolpill{ display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono'; font-size:12.5px;
+    background:rgba(255,255,255,0.04); border:1px solid var(--border); padding:5px 11px; border-radius:20px; margin:4px 4px 0 0; }
+  .toolpill b{color:var(--cyan);}
+
+  ul.checklist{ list-style:none; padding-left:0; margin:14px 0;}
+  ul.checklist li{ padding:6px 0 6px 28px; position:relative; font-size:14.5px;}
+  ul.checklist li::before{ content:"▸"; position:absolute; left:0; color:var(--cyan); font-weight:700;}
+
+  .steps{ list-style:none; padding-left:0; margin:0; counter-reset:step; }
+  .steps li{ counter-increment:step; padding:11px 0 11px 44px; position:relative; font-size:14.5px; border-bottom:1px solid var(--border); }
+  .steps li:last-child{ border-bottom:none; }
+  .steps li::before{ content: counter(step); position:absolute; left:0; top:9px; width:26px; height:26px; border-radius:7px;
+    background:rgba(0,217,255,0.12); color:var(--cyan); border:1px solid var(--cyan); font-family:'JetBrains Mono'; font-weight:700; font-size:12.5px;
+    display:flex; align-items:center; justify-content:center; }
+
+  .watch{ border-left:3px solid var(--green); background:rgba(127,224,140,0.05); padding:16px 20px; border-radius:0 10px 10px 0; margin:20px 0; font-size:14px; }
+  .watch .lbl{ font-family:'JetBrains Mono'; font-size:11.5px; color:var(--green); letter-spacing:1px; font-weight:700;}
+  .watch a{ color:var(--cyan); text-decoration:none; border-bottom:1px dotted var(--cyan);}
+
+  .footerbar{ max-width:1000px; margin:60px auto 0; padding:26px 24px 60px; color:var(--text-dim); font-family:'JetBrains Mono'; font-size:12.5px; border-top:1px solid var(--border); }
+  .footerbar .prompt::before{content:"$ "; color:var(--green);}
+  ::selection{ background:rgba(0,217,255,0.3); }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+  <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+  <span class="path">~/bootcamp/module-notes/advanced-ai-workflows-v2.md</span>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">field notes — not a lecture</div>
+  <h1>Advanced AI Workflows: Agents, Retrieval &amp; Automation</h1>
+  <p class="sub">No dictionary definitions. Every idea starts with <b>"imagine this"</b>, then a visual, then a real company using it, then the actual build steps. By the end you'll design a full AI assistant yourself.</p>
+</div>
+
+<div class="legend">
+  <span>❓ Problem</span><span>💡 Solution</span><span>🧠 Visual</span><span>🏢 Industry Example</span>
+  <span>⚙️ Live Workflow</span><span>💻 Code Example</span><span>🎯 Interview Question</span><span>🔥 Challenge</span>
+</div>
+
+<div class="tabnav">
+  <a href="#m1"><b>01</b> AI Agents &amp; Tool Calling</a>
+  <a href="#m2"><b>02</b> Retrieval, Embeddings &amp; Vector DB</a>
+  <a href="#m3"><b>03</b> Workflow Automation &amp; Multi-Agent</a>
+  <a href="#m4"><b>04</b> Interactive Demo</a>
+  <a href="#m5"><b>05</b> Mini Project</a>
+  <a href="#m6"><b>06</b> Final Challenge</a>
+</div>
+
+<!-- ===================== MODULE 1 : AGENTS + TOOL CALLING ===================== -->
+<div class="module" id="m1" style="--accent:#00d9ff">
+  <div class="modhead"><span class="modnum">01</span><h2>AI Agents &amp; Tool Calling</h2></div>
+  <p class="tagline">Forget "an AI agent is an autonomous system that..." — just look at what it actually does.</p>
+
+  <div class="tbox t-problem"><div class="lbl">❓ PROBLEM</div>
+    <p>Every course defines "AI Agent" with a heavy sentence full of words like "autonomous" and "goal-directed." Nobody remembers that sentence a week later.</p>
+  </div>
+
+  <div class="tbox t-solution"><div class="lbl">💡 SOLUTION — Imagine this</div>
+    <p>You message Swiggy: <i>"Where is my order?"</i> Within 2 seconds, you get a reply: <i>"Your rider is 5 minutes away."</i></p>
+    <p>That entire behind-the-scenes process is called an <b>AI Workflow</b>. No long definition needed.</p>
+  </div>
+
+  <div class="tbox t-visual"><div class="lbl">🧠 VISUAL</div>
+    <pre class="ascii"><span class="step">User: "Where is my order?"</span>
+<span class="arrow">↓</span>
+<span class="hi">AI Agent receives message</span>
+<span class="arrow">↓</span>
+<span class="step">Reads the question</span>
+<span class="arrow">↓</span>
+<span class="hi2">Checks Order Database</span>
+<span class="arrow">↓</span>
+<span class="step">Finds the order</span>
+<span class="arrow">↓</span>
+<span class="hi3">Replies: "Your rider is 5 minutes away."</span></pre>
+  </div>
+
+  <div class="thinking"><span class="robot">🤖</span> AI thinking<span class="dots"><span></span><span></span><span></span></span></div>
+
+  <div class="tbox t-industry"><div class="lbl">🏢 INDUSTRY EXAMPLE</div>
+    <p><b>Swiggy / Zomato</b> — their delivery-tracking chat is a live AI agent. It doesn't guess the rider's location. It calls a real tracking system every time you ask, and answers with the real number.</p>
+  </div>
+
+  <div class="tbox t-visual"><div class="lbl">🧠 GENERAL AGENT VISUAL</div>
+    <pre class="ascii"><span class="step">User</span>
+<span class="arrow">│</span>
+<span class="arrow">▼</span>
+<span class="hi">AI Agent</span>
+<span class="arrow">│</span>
+<span class="dim">├── Search Database</span>
+<span class="dim">├── Call API</span>
+<span class="dim">├── Read PDF</span>
+<span class="dim">├── Use Calculator</span>
+<span class="arrow">│</span>
+<span class="arrow">▼</span>
+<span class="hi2">Generate Response</span>
+<span class="arrow">│</span>
+<span class="arrow">▼</span>
+<span class="step">User</span></pre>
+  </div>
+
+  <div class="tbox t-problem"><div class="lbl">❓ PROBLEM — now the tricky part</div>
+    <p>You ask ChatGPT: <i>"Book a flight to Goa."</i> ChatGPT cannot book a flight. It has no hands. It can only generate text.</p>
+  </div>
+
+  <div class="tbox t-solution"><div class="lbl">💡 SOLUTION — Tool Calling</div>
+    <p>ChatGPT calls an outside tool to do the real-world action. Example: it calls <b>Make.com</b>, which calls a real Flight API, which actually books the ticket. ChatGPT then replies with the confirmation.</p>
+  </div>
+
+  <div class="tbox t-workflow"><div class="lbl">⚙️ LIVE WORKFLOW — booking a flight</div>
+    <pre class="ascii"><span class="step">You ask ChatGPT</span>
+<span class="arrow">↓</span>
+<span class="step">"Book a flight to Goa"</span>
+<span class="arrow">↓</span>
+<span class="hi3">ChatGPT cannot book directly</span>
+<span class="arrow">↓</span>
+<span class="hi">It calls Make.com (automation tool)</span>
+<span class="arrow">↓</span>
+<span class="hi2">Make.com calls the Flight API</span>
+<span class="arrow">↓</span>
+<span class="step">Booking Done</span>
+<span class="arrow">↓</span>
+<span class="hi2">ChatGPT replies with confirmation</span></pre>
+  </div>
+
+  <div class="tbox t-workflow"><div class="lbl">⚙️ LIVE WORKFLOW — a simpler one: weather</div>
+    <pre class="ascii"><span class="step">ChatGPT</span>
+<span class="arrow">↓</span>
+<span class="step">Needs current weather</span>
+<span class="arrow">↓</span>
+<span class="hi">Calls Weather API</span>
+<span class="arrow">↓</span>
+<span class="hi2">API returns: 32°C, clear sky</span>
+<span class="arrow">↓</span>
+<span class="step">ChatGPT explains it in plain words</span></pre>
+  </div>
+
+  <div class="tbox t-code"><div class="lbl">💻 CODE EXAMPLE — how a tool is described to the AI</div>
+    <pre class="codeblk"><span class="c-com">// This is what you hand the AI — not code the AI runs itself,</span>
+<span class="c-com">// just a menu of tools it's allowed to pick from.</span>
+<span class="c-key">const</span> tools = [
+  {
+    name: <span class="c-str">"get_weather"</span>,
+    description: <span class="c-str">"Returns current weather for a given city."</span>,
+    inputs: { city: <span class="c-str">"string"</span> }
+  },
+  {
+    name: <span class="c-str">"check_order_status"</span>,
+    description: <span class="c-str">"Looks up an order by ID and returns its status."</span>,
+    inputs: { orderId: <span class="c-str">"string"</span> }
+  }
+];
+<span class="c-com">// The AI reads this list, picks ONE tool, and tells you</span>
+<span class="c-com">// which inputs to fill in. Your app runs the real function.</span></pre>
+  </div>
+
+  <div class="interview-box"><div class="lbl">🎯 INTERVIEW QUESTIONS</div>
+    <ul>
+      <li>What is Tool Calling, in one sentence?</li>
+      <li>What is the difference between an AI Workflow and an AI Agent?</li>
+      <li>Why can't a plain LLM book a flight or send a real email by itself?</li>
+      <li>Give one real example of an app that uses tool calling.</li>
+    </ul>
+  </div>
+
+  <div class="challenge-box"><div class="lbl">🔥 CHALLENGE</div>
+    <p>Pick any app on your phone. Find one feature where it must be calling an outside tool (not just chatting). Write the flow using the same ↓ arrow style shown above.</p>
+  </div>
+</div>
+
+<!-- ===================== MODULE 2 : RETRIEVAL + EMBEDDINGS + VECTOR DB ===================== -->
+<div class="module" id="m2" style="--accent:#7fe08c">
+  <div class="modhead"><span class="modnum">02</span><h2>Retrieval, Embeddings &amp; Vector DB</h2></div>
+  <p class="tagline">Don't start with embeddings. Start with the question every student actually has.</p>
+
+  <div class="tbox t-problem"><div class="lbl">❓ PROBLEM</div>
+    <p>Can ChatGPT read <b>your</b> college notes? No. Why not? Because it has never seen your files. It only knows what it was trained on.</p>
+  </div>
+
+  <div class="tbox t-solution"><div class="lbl">💡 SOLUTION — Retrieval</div>
+    <p>You give the AI a searchable copy of your own documents. When you ask a question, it searches your files first, then answers using what it found. This is called <b>RAG</b> — Retrieval-Augmented Generation.</p>
+  </div>
+
+  <div class="tbox t-visual"><div class="lbl">🧠 VISUAL — the full pipeline</div>
+    <pre class="ascii"><span class="step">PDF</span>
+<span class="arrow">↓</span>
+<span class="hi">Split into Chunks</span>
+<span class="arrow">↓</span>
+<span class="hi2">Convert into Embeddings</span>
+<span class="arrow">↓</span>
+<span class="step">Store in Vector Database</span>
+<span class="arrow">↓</span>
+<span class="step">User asks a Question</span>
+<span class="arrow">↓</span>
+<span class="hi2">Similarity Search</span>
+<span class="arrow">↓</span>
+<span class="hi3">LLM Answers using the matched text</span></pre>
+  </div>
+
+  <div class="tbox t-industry"><div class="lbl">🏢 INDUSTRY EXAMPLE — this is RAG</div>
+    <pre class="ascii"><span class="step">TCS Employee uploads HR Policy PDF</span>
+<span class="arrow">↓</span>
+<span class="step">Employee asks: "How many casual leaves?"</span>
+<span class="arrow">↓</span>
+<span class="hi">AI searches the Vector DB</span>
+<span class="arrow">↓</span>
+<span class="hi2">Returns the exact matching paragraph</span>
+<span class="arrow">↓</span>
+<span class="hi3">LLM replies with the real policy answer</span></pre>
+  </div>
+
+  <div class="card">
+    <h3>Embedding — no math, just coordinates</h3>
+    <p style="font-size:14.7px">Imagine every sentence turns into a set of coordinates. Sentences with similar meaning land close together on the map.</p>
+    <div class="grid2">
+      <div>
+        <pre class="ascii" style="text-align:left"><span class="step">"Apple is a fruit"</span>  <span class="arrow">→</span> <span class="hi">(2.1, 5.6, 7.4)</span>
+<span class="step">"Banana"</span>            <span class="arrow">→</span> <span class="hi">(2.2, 5.7, 7.3)</span>
+<span class="step">"Orange"</span>            <span class="arrow">→</span> <span class="hi">(2.0, 5.5, 7.5)</span>
+
+<span class="dim">Nearby numbers = similar meaning</span></pre>
+      </div>
+      <div class="diagram" style="margin:0;padding:14px;">
+        <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="20" width="120" height="80" rx="8" fill="rgba(255,180,84,0.08)" stroke="var(--amber)"/>
+          <text x="80" y="35" fill="var(--amber)" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Fruit</text>
+          <circle cx="55" cy="60" r="4" fill="var(--amber)"/><text x="65" y="63" fill="var(--text-dim)" font-size="9" font-family="JetBrains Mono">Apple</text>
+          <circle cx="70" cy="80" r="4" fill="var(--amber)"/><text x="80" y="83" fill="var(--text-dim)" font-size="9" font-family="JetBrains Mono">Orange</text>
+          <circle cx="45" cy="85" r="4" fill="var(--amber)"/><text x="30" y="98" fill="var(--text-dim)" font-size="9" font-family="JetBrains Mono">Banana</text>
+
+          <rect x="170" y="100" width="120" height="80" rx="8" fill="rgba(0,217,255,0.08)" stroke="var(--cyan)"/>
+          <text x="230" y="115" fill="var(--cyan)" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Animal</text>
+          <circle cx="210" cy="145" r="4" fill="var(--cyan)"/><text x="220" y="148" fill="var(--text-dim)" font-size="9" font-family="JetBrains Mono">Dog</text>
+          <circle cx="235" cy="165" r="4" fill="var(--cyan)"/><text x="245" y="168" fill="var(--text-dim)" font-size="9" font-family="JetBrains Mono">Cat</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Vector Database — a different kind of search</h3>
+    <div class="grid2">
+      <div>
+        <p style="font-size:13.5px;color:var(--text-dim);margin-bottom:6px">Normal database</p>
+        <pre class="codeblk" style="text-align:left"><span class="c-key">SELECT</span> * <span class="c-key">FROM</span> notes
+<span class="c-key">WHERE</span> title = <span class="c-str">"AI"</span></pre>
+        <p style="font-size:13px;color:var(--text-dim);margin-top:6px">Needs the exact word to match.</p>
+      </div>
+      <div>
+        <p style="font-size:13.5px;color:var(--text-dim);margin-bottom:6px">Vector database</p>
+        <pre class="codeblk" style="text-align:left"><span class="c-com">find(</span><span class="c-str">"something similar
+to AI Agents"</span><span class="c-com">)</span></pre>
+        <p style="font-size:13px;color:var(--text-dim);margin-top:6px">No exact keyword needed. It matches meaning.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tbox t-visual"><div class="lbl">🧠 VISUAL — answering a question</div>
+    <pre class="ascii"><span class="step">Question</span>
+<span class="arrow">↓</span>
+<span class="hi">Embedding</span>
+<span class="arrow">↓</span>
+<span class="hi2">Vector DB</span>
+<span class="arrow">↓</span>
+<span class="step">Nearest Match</span>
+<span class="arrow">↓</span>
+<span class="hi3">Answer</span></pre>
+  </div>
+
+  <div class="tbox t-code"><div class="lbl">💻 CODE EXAMPLE — the retrieval step, in plain pseudo-code</div>
+    <pre class="codeblk"><span class="c-key">function</span> <span class="c-fn">answerFromDocs</span>(question) {
+  <span class="c-key">const</span> qEmbedding = <span class="c-fn">embed</span>(question);
+  <span class="c-key">const</span> matches = vectorDB.<span class="c-fn">search</span>(qEmbedding, { topK: <span class="c-key">5</span> });
+  <span class="c-key">const</span> context = matches.<span class="c-fn">map</span>(m => m.text).<span class="c-fn">join</span>(<span class="c-str">"\n"</span>);
+  <span class="c-key">return</span> <span class="c-fn">askAI</span>(<span class="c-str">`Answer using only this context:\n${context}\n\nQuestion: ${question}`</span>);
+}</pre>
+  </div>
+
+  <div class="card">
+    <h3>Common vector databases</h3>
+    <div>
+      <span class="toolpill"><b>Pinecone</b> — fully managed, easy to start</span>
+      <span class="toolpill"><b>Chroma</b> — open source, great for small projects</span>
+      <span class="toolpill"><b>Weaviate</b> — open source, built-in search features</span>
+      <span class="toolpill"><b>Supabase (pgvector)</b> — vector search inside normal Postgres</span>
+      <span class="toolpill"><b>FAISS</b> — a library, not a full database, good for learning</span>
+    </div>
+  </div>
+
+  <div class="interview-box"><div class="lbl">🎯 INTERVIEW QUESTIONS</div>
+    <ul>
+      <li>What is an embedding?</li>
+      <li>Why use a vector database instead of MongoDB or MySQL for this?</li>
+      <li>Explain RAG in under 30 seconds.</li>
+      <li>Why do we split documents into chunks instead of storing the whole file as one embedding?</li>
+      <li>What happens if your chunk size is too small? Too large?</li>
+    </ul>
+  </div>
+
+  <div class="challenge-box"><div class="lbl">🔥 CHALLENGE</div>
+    <p>Take any 1-page document (a notice, a syllabus). Split it into 3 chunks by hand. Pick a question. Decide which single chunk should be retrieved to answer it — and explain why the other two shouldn't match.</p>
+  </div>
+</div>
+
+<!-- ===================== MODULE 3 : AUTOMATION + MULTI-AGENT ===================== -->
+<div class="module" id="m3" style="--accent:#b18cff">
+  <div class="modhead"><span class="modnum">03</span><h2>Workflow Automation &amp; Multi-Agent</h2></div>
+  <p class="tagline">One AI call answers a question. A workflow finishes a whole task, end to end.</p>
+
+  <div class="tbox t-problem"><div class="lbl">❓ PROBLEM</div>
+    <p>A customer emails asking for a refund. Somebody has to read the email, check the order, check the payment, check the policy, and reply. That's five separate jobs for one ticket.</p>
+  </div>
+
+  <div class="tbox t-solution"><div class="lbl">💡 SOLUTION — chain the steps</div>
+    <p>Instead of one person doing all five jobs, one workflow does them automatically, in order, each step feeding the next.</p>
+  </div>
+
+  <div class="tbox t-industry"><div class="lbl">🏢 INDUSTRY EXAMPLE — Amazon-style refund</div>
+    <pre class="ascii"><span class="step">Customer Refund Request</span>
+<span class="arrow">↓</span>
+<span class="hi">AI reads the email</span>
+<span class="arrow">↓</span>
+<span class="hi2">Checks the order</span>
+<span class="arrow">↓</span>
+<span class="hi2">Checks the payment</span>
+<span class="arrow">↓</span>
+<span class="hi2">Checks the return policy</span>
+<span class="arrow">↓</span>
+<span class="hi3">Creates the refund</span>
+<span class="arrow">↓</span>
+<span class="step">Sends confirmation email</span></pre>
+    <p style="margin-top:10px">One workflow. Five checks. Zero humans needed for the simple cases.</p>
+  </div>
+
+  <div class="tbox t-visual"><div class="lbl">🧠 VISUAL — Multi-Agent system</div>
+    <pre class="ascii"><span class="step">Customer</span>
+<span class="arrow">│</span>
+<span class="arrow">▼</span>
+<span class="hi">Main AI</span>
+<span class="arrow">│</span>
+<span class="dim">├────► Search Agent</span>
+<span class="dim">├────► Email Agent</span>
+<span class="dim">├────► Payment Agent</span>
+<span class="arrow">│</span>
+<span class="arrow">▼</span>
+<span class="hi3">Final Response</span></pre>
+    <p style="margin-top:10px;font-size:14px;color:var(--text-dim)">One "Main AI" doesn't do everything itself. It delegates each piece to a smaller, focused agent — the same way a manager delegates to specialists instead of doing every job personally.</p>
+  </div>
+
+  <div class="tbox t-code"><div class="lbl">💻 CODE EXAMPLE — chaining steps with a safety check</div>
+    <pre class="codeblk"><span class="c-key">async function</span> <span class="c-fn">handleSupportTicket</span>(message) {
+  <span class="c-key">const</span> issueType = <span class="c-key">await</span> <span class="c-fn">classify</span>(message);
+  <span class="c-key">const</span> knowledge = <span class="c-key">await</span> <span class="c-fn">searchKnowledgeBase</span>(issueType);
+  <span class="c-key">const</span> draft = <span class="c-key">await</span> <span class="c-fn">draftReply</span>(message, knowledge);
+
+  <span class="c-key">if</span> (draft.confidence > <span class="c-key">0.85</span>) {
+    <span class="c-key">await</span> <span class="c-fn">sendReply</span>(draft.text);   <span class="c-com">// auto-resolve</span>
+  } <span class="c-key">else</span> {
+    <span class="c-key">await</span> <span class="c-fn">escalateToHuman</span>(message, draft); <span class="c-com">// safety net</span>
+  }
+  <span class="c-key">await</span> <span class="c-fn">logTicket</span>(message, issueType, draft);
+}</pre>
+  </div>
+
+  <div class="interview-box"><div class="lbl">🎯 INTERVIEW QUESTIONS</div>
+    <ul>
+      <li>What is the difference between an AI Agent and a multi-agent system?</li>
+      <li>Why check confidence before auto-sending an AI reply?</li>
+      <li>Why chain small steps instead of asking one big AI prompt to do everything?</li>
+      <li>What should happen when one step in the workflow fails?</li>
+    </ul>
+  </div>
+
+  <div class="challenge-box"><div class="lbl">🔥 CHALLENGE</div>
+    <p>Design a multi-agent system for a college placement cell. You need at least 3 specialist agents reporting to one main agent. Name each agent and its one job.</p>
+  </div>
+</div>
+
+<!-- ===================== MODULE 4 : INTERACTIVE DEMO ===================== -->
+<div class="module" id="m4" style="--accent:#ffb454">
+  <div class="modhead"><span class="modnum">04</span><h2>Interactive Demo — Order a Pizza</h2></div>
+  <p class="tagline">Click the button. Watch an AI agent work through its own steps, live.</p>
+
+  <div class="demo-box">
+    <button class="demo-btn" onclick="runDemo()">🍕 Order Pizza</button>
+    <div class="demo-steps" id="demoSteps">
+      <div class="demo-step" data-text="🤖 AI Thinking...">🤖 AI Thinking...</div>
+      <div class="demo-step" data-text="🔍 Search Menu">🔍 Search Menu</div>
+      <div class="demo-step" data-text="💳 Call Payment API">💳 Call Payment API</div>
+      <div class="demo-step" data-text="🧾 Generate Bill">🧾 Generate Bill</div>
+      <div class="demo-step" data-text="✅ Confirm Order">✅ Confirm Order</div>
+    </div>
+  </div>
+
+  <div class="tbox t-visual"><div class="lbl">🧠 WHAT JUST HAPPENED</div>
+    <p>Every click ran the exact same loop from Module 1: Think → Act (call a tool) → Observe → repeat, until the goal — a confirmed order — was reached.</p>
+  </div>
+
+  <script>
+    function runDemo(){
+      const steps = document.querySelectorAll('#demoSteps .demo-step');
+      steps.forEach(s => { s.classList.remove('show','done'); });
+      steps.forEach((s, i) => {
+        setTimeout(() => { s.classList.add('show'); }, i * 550);
+        setTimeout(() => { s.classList.add('done'); }, i * 550 + 450);
+      });
+    }
+  </script>
+</div>
+
+<!-- ===================== MODULE 5 : MINI PROJECT ===================== -->
+<div class="module" id="m5" style="--accent:#00d9ff">
+  <div class="modhead"><span class="modnum">05</span><h2>Mini Project — Build a PDF Chatbot</h2></div>
+  <p class="tagline">The smallest real RAG project you can build. Good for a weekend, great for a portfolio.</p>
+
+  <div class="tbox t-visual"><div class="lbl">🧠 VISUAL</div>
+    <pre class="ascii"><span class="step">Upload PDF</span>
+<span class="arrow">↓</span>
+<span class="hi">Convert to Embeddings</span>
+<span class="arrow">↓</span>
+<span class="hi2">Store in Pinecone</span>
+<span class="arrow">↓</span>
+<span class="step">Ask Questions</span>
+<span class="arrow">↓</span>
+<span class="hi3">Answer Generated</span></pre>
+  </div>
+
+  <div class="card">
+    <h3>Build steps</h3>
+    <ol class="steps">
+      <li>Pick one PDF. Something small — a syllabus or a policy doc works well.</li>
+      <li>Extract the text from the PDF.</li>
+      <li>Split the text into small chunks, a few sentences each.</li>
+      <li>Turn every chunk into an embedding.</li>
+      <li>Store each embedding and its text in Pinecone (or Chroma if you want something free and local).</li>
+      <li>Build a simple input box where a user can type a question.</li>
+      <li>Turn the question into an embedding too, and search for the closest chunks.</li>
+      <li>Send the matched chunks and the question to the AI, and show its answer.</li>
+    </ol>
+  </div>
+
+  <div class="watch">
+    <div class="lbl">GOOD TO KNOW</div>
+    Chroma and FAISS are free and run locally — best for a first attempt. Pinecone is managed and scales better once you're happy with the local version.
+  </div>
+</div>
+
+<!-- ===================== MODULE 6 : FINAL CHALLENGE ===================== -->
+<div class="module" id="m6" style="--accent:#ff6b9d">
+  <div class="modhead"><span class="modnum">06</span><h2>Final Challenge</h2></div>
+  <p class="tagline">Put agents, retrieval, and automation together in one design.</p>
+
+  <div class="challenge-box">
+    <div class="lbl">🔥 DESIGN AN AI ASSISTANT FOR A HOSPITAL</div>
+    <p>Your assistant must handle all of these:</p>
+    <ul class="req">
+      <li>Appointment Booking</li>
+      <li>Patient Record Search</li>
+      <li>Email Reminder</li>
+      <li>Billing</li>
+      <li>FAQ</li>
+    </ul>
+    <p style="margin-top:14px">Draw the full workflow. Decide:</p>
+    <ul class="checklist">
+      <li>Is this one agent, or a main agent with specialist agents underneath?</li>
+      <li>Which parts need retrieval (a vector DB) — patient records? hospital policy FAQ?</li>
+      <li>Which parts need tool calling — booking, billing, sending an email?</li>
+      <li>Where does a human need to step in, instead of the AI deciding alone?</li>
+    </ul>
+  </div>
+
+  <div class="interview-box"><div class="lbl">🎯 BEFORE YOU START, ANSWER THESE OUT LOUD</div>
+    <ul>
+      <li>Which single agent would you build first, and why that one?</li>
+      <li>What's the one part of this system you would never fully automate?</li>
+      <li>If patient records are sensitive, how does that change your vector DB choice?</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footerbar">
+  <div class="prompt">end of notes — now go design something a real hospital could actually use</div>
+</div>
+
+</body>
+</html>

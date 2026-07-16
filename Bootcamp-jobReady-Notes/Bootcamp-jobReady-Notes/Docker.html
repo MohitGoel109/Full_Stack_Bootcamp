@@ -1,0 +1,2488 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>DevOps Foundations for Full Stack Developers</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.7;
+        }
+
+        section {
+            padding: 90px 10%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #0f172a;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #475569;
+        }
+
+        .highlight {
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #dbeafe;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+        }
+
+        nav .wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 10%;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 22px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        .hero {
+            padding: 100px 10%;
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            color: white;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3.2rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            color: #e2e8f0;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: white;
+            color: #2563eb;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .terminal {
+
+            background: #111827;
+            color: #22c55e;
+            padding: 25px;
+            border-radius: 14px;
+            font-family: monospace;
+            font-size: 15px;
+            line-height: 1.9;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .2);
+            overflow: auto;
+
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+        }
+
+        .story {
+            display: grid;
+            grid-template-columns: 1fr 120px 1fr;
+            gap: 25px;
+            margin-top: 50px;
+            align-items: center;
+        }
+
+        .box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .arrow {
+            text-align: center;
+            font-size: 45px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .tip {
+            margin-top: 25px;
+            background: #ecfeff;
+            padding: 18px;
+            border-left: 5px solid #06b6d4;
+            border-radius: 8px;
+        }
+
+        .diagram {
+            margin-top: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .infinity {
+            font-size: 70px;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 140px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .step:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .details {
+            margin-top: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        .details img{
+            width: 90%;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        footer {
+            padding: 50px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .fade {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: 1s;
+        }
+
+        .fade.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .docker-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .docker-table th {
+            background: #2563eb;
+            color: white;
+            padding: 16px;
+            text-align: left;
+        }
+
+        .docker-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .docker-table tr:hover {
+            background: #f8fafc;
+        }
+
+        @media (max-width: 900px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .story {
+                grid-template-columns: 1fr;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            nav ul {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="wrapper">
+            <div class="logo">🐳 DevOps Notes</div>
+
+            <ul>
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#devops">DevOps</a></li>
+                <li><a href="#sdlc">SDLC</a></li>
+                <li><a href="#comparison">Traditional vs DevOps</a></li>
+                <li><a href="#cicd">CI/CD</a></li>
+                <li><a href="#dockerintro">Docker</a></li>
+                <li><a href="#vm-container">VM vs Container</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#images">Images</a></li>
+                <li><a href="#commands">Commands</a></li>
+                <li><a href="#dockerfile">Dockerfile</a></li>
+                <li><a href="#compose">Compose</a></li>
+                <li><a href="#volumes">Volumes</a></li>
+                <li><a href="#networks">Networks</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-grid">
+            <div>
+                <div class="badge">🚀 Beginner Friendly</div>
+
+                <h1>DevOps Foundations for Full Stack Developers</h1>
+
+                <p>
+                    Forget boring notes. Learn DevOps through stories, diagrams,
+                    practical examples and real industry workflow.
+                </p>
+
+                <a href="#problem" class="btn"> Start Learning → </a>
+            </div>
+
+            <div>
+                <div class="terminal">
+                    $ git push origin main
+
+                    <br /><br />
+
+                    ✅ Code uploaded
+
+                    <br /><br />
+
+                    ⚙ Running Tests...
+
+                    <br /><br />
+
+                    🐳 Building Docker Image...
+
+                    <br /><br />
+
+                    🚀 Deploying Application...
+
+                    <br /><br />
+
+                    ✅ Production Updated
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="problem" class="fade">
+        <div class="container">
+            <div class="badge">SECTION 1</div>
+
+            <h2>😩 Why was DevOps even created?</h2>
+
+            <p>
+                Imagine you built an amazing MERN project on your laptop. Everything
+                works perfectly. You send it to your company. Suddenly...
+            </p>
+
+            <div class="story">
+                <div class="box">
+                    <h3>👨‍💻 Developer</h3>
+
+                    <ul>
+                        <li>Works perfectly</li>
+
+                        <li>Node 22</li>
+
+                        <li>MongoDB Latest</li>
+
+                        <li>npm install done</li>
+                    </ul>
+                </div>
+
+                <div class="arrow">➡</div>
+
+                <div class="box">
+                    <h3>🖥 Production Server</h3>
+
+                    <ul>
+                        <li>Different Node Version</li>
+
+                        <li>Missing Packages</li>
+
+                        <li>Wrong Environment</li>
+
+                        <li>Application Crashes ❌</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tip">
+                <strong>Classic Dialogue:</strong>
+
+                "It works on my machine." This single sentence caused thousands of
+                deployment problems before DevOps became popular.
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Problem 1</h3>
+
+                    <p>Developer and server have different environments.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Problem 2</h3>
+
+                    <p>Deployment takes hours and is mostly manual.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Problem 3</h3>
+
+                    <p>Developers and Operations blame each other.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Problem 4</h3>
+
+                    <p>Users experience downtime after every release.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="devops" class="fade">
+        <div class="container">
+            <div class="badge">SECTION 2</div>
+
+            <h2>⚙ What is DevOps?</h2>
+
+            <p>
+                DevOps is not a tool. DevOps is a culture where Developers and
+                Operations teams work together to build, test and deploy software
+                faster.
+            </p>
+
+            <div class="diagram">
+                <div class="circle">Develop</div>
+
+                <div class="infinity">∞</div>
+
+                <div class="circle">Operate</div>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>💻 Developer</h3>
+
+                    <p>Writes features and fixes bugs.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🧪 QA</h3>
+
+                    <p>Tests every release.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🚀 DevOps</h3>
+
+                    <p>Automates build, testing and deployment.</p>
+                </div>
+
+                <div class="card">
+                    <h3>👤 User</h3>
+
+                    <p>Gets updates quickly with fewer bugs.</p>
+                </div>
+            </div>
+
+            <div class="tip">
+                <b>Real Example</b>
+
+                Netflix, Amazon and Spotify deploy hundreds of times every day because
+                they automate their workflow using DevOps practices.
+            </div>
+            <center>
+                <img src="./Devops1.jpeg" width="1100px">
+            </center>
+        </div>
+    </section>
+
+    <section id="sdlc" class="fade">
+        <div class="container">
+            <div class="badge">SECTION 3</div>
+
+            <h2>📈 Software Development Life Cycle (SDLC)</h2>
+
+            <p>
+                Every software follows almost the same journey. Click any stage to see
+                what actually happens there.
+            </p>
+
+            <div class="timeline">
+                <div class="step" onclick="changeInfo('plan')">Planning</div>
+
+                <div class="step" onclick="changeInfo('design')">Design</div>
+
+                <div class="step" onclick="changeInfo('develop')">Development</div>
+
+                <div class="step" onclick="changeInfo('testing')">Testing</div>
+
+                <div class="step" onclick="changeInfo('deploy')">Deployment</div>
+
+                <div class="step" onclick="changeInfo('maintain')">Maintenance</div>
+            </div>
+
+            <div class="details" id="details">
+                <h3>Planning</h3>
+
+                <p>
+                    Identify the problem. Discuss features. Understand users. Estimate
+                    timeline.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===========================================
+SECTION 4
+=========================================== -->
+
+    <section id="comparison" class="fade">
+
+        <div class="container">
+
+            <div class="badge">
+                SECTION 4
+            </div>
+
+            <h2>
+                ⚔ Traditional Development vs DevOps
+            </h2>
+
+            <p>
+
+                Before DevOps, Developers and Operations worked like two separate teams.
+                Both had different goals, which caused delays and deployment failures.
+
+            </p>
+
+            <div class="card-grid">
+
+                <div class="card">
+
+                    <h3>❌ Traditional Development</h3>
+
+                    <ul>
+
+                        <li>Developer writes code</li>
+                        <li>Throws code to Operations Team</li>
+                        <li>Manual deployment</li>
+                        <li>Slow releases</li>
+                        <li>Frequent downtime</li>
+                        <li>Lots of blame game 😅</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>✅ DevOps Culture</h3>
+
+                    <ul>
+
+                        <li>One collaborative team</li>
+                        <li>Automated Testing</li>
+                        <li>Automated Deployment</li>
+                        <li>Continuous Monitoring</li>
+                        <li>Fast Releases</li>
+                        <li>Quick Bug Fixes</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <div class="tip">
+
+                <b>Think Like This</b>
+
+                Traditional Development is like a relay race 🏃
+
+                Developer → QA → Operations
+
+                Everyone waits for the previous person.
+
+                <br><br>
+
+                DevOps is like a football team ⚽
+
+                Everyone plays together.
+
+            </div>
+
+            <div style="margin-top:50px;">
+
+                <h3 style="margin-bottom:25px;">
+                    Workflow Comparison
+                </h3>
+
+                <div class="diagram">
+
+                    <div class="circle">
+                        Developer
+                    </div>
+
+                    ➡
+
+                    <div class="circle">
+                        QA
+                    </div>
+
+                    ➡
+
+                    <div class="circle">
+                        Operations
+                    </div>
+
+                    ➡
+
+                    <div class="circle">
+                        Users
+                    </div>
+
+                </div>
+
+                <br><br>
+
+                <center style="font-size:40px;color:#2563eb;">⬇</center>
+
+                <br>
+
+                <div class="diagram">
+
+                    <div class="circle">
+                        Developer
+                    </div>
+
+                    <div class="infinity">
+                        ∞
+                    </div>
+
+                    <div class="circle">
+                        Operations
+                    </div>
+
+                </div>
+
+                <p style="text-align:center;margin-top:20px;font-weight:600;">
+
+                    Continuous Collaboration
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ===========================================
+SECTION 5
+=========================================== -->
+
+    <section id="cicd" class="fade">
+
+        <div class="container">
+
+            <div class="badge">
+                SECTION 5
+            </div>
+
+            <h2>
+
+                🚀 CI/CD Explained
+
+            </h2>
+
+            <p>
+
+                Whenever you push code to GitHub,
+                a series of automated steps can happen.
+
+                This process is called a CI/CD Pipeline.
+
+            </p>
+
+            <div class="timeline">
+
+                <div class="step">
+                    👨‍💻
+                    <br>
+                    Write Code
+                </div>
+
+                <div class="step">
+                    📤
+                    <br>
+                    Git Push
+                </div>
+
+                <div class="step">
+                    🧪
+                    <br>
+                    Run Tests
+                </div>
+
+                <div class="step">
+                    🐳
+                    <br>
+                    Build Docker
+                </div>
+
+                <div class="step">
+                    🚀
+                    <br>
+                    Deploy
+                </div>
+
+                <div class="step">
+                    👥
+                    <br>
+                    Users
+                </div>
+
+            </div>
+
+            <div class="details">
+
+                <h3>
+
+                    Continuous Integration (CI)
+
+                </h3>
+
+                <ul>
+
+                    <li>Developers push code multiple times every day.</li>
+
+                    <li>Tests run automatically.</li>
+
+                    <li>Bugs are detected early.</li>
+
+                    <li>No waiting till the end of the project.</li>
+
+                </ul>
+
+                <hr style="margin:25px 0;">
+
+                <h3>
+
+                    Continuous Deployment (CD)
+
+                </h3>
+
+                <ul>
+
+                    <li>Application automatically reaches Production.</li>
+
+                    <li>No manual upload.</li>
+
+                    <li>Deployment becomes faster.</li>
+
+                    <li>Less chance of human mistakes.</li>
+
+                </ul>
+
+            </div>
+
+            <div class="tip">
+
+                <b>Example</b>
+
+                You push your MERN project to GitHub.
+
+                ↓
+
+                GitHub Actions starts automatically.
+
+                ↓
+
+                Tests pass.
+
+                ↓
+
+                Docker Image is created.
+
+                ↓
+
+                Application is deployed to Render/AWS.
+
+                ↓
+
+                Users see new features.
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ===========================================
+SECTION 6
+=========================================== -->
+
+    <section id="dockerintro" class="fade">
+
+        <div class="container">
+
+            <div class="badge">
+                SECTION 6
+            </div>
+
+            <h2>
+
+                🐳 Why Docker Was Invented?
+
+            </h2>
+
+            <p>
+
+                Developers were tired of hearing one sentence...
+
+            </p>
+
+            <div class="terminal">
+
+                ❌ It works on my machine.
+
+            </div>
+
+            <br>
+
+            <p>
+
+                Different developers had different
+
+            <ul>
+
+                <li>Node Versions</li>
+
+                <li>Operating Systems</li>
+
+                <li>Package Versions</li>
+
+                <li>Libraries</li>
+
+                <li>Environment Variables</li>
+
+            </ul>
+
+            <b> This created deployment problems.</b>
+
+            </p>
+
+            <div class="story">
+
+                <div class="box">
+
+                    <h3>
+
+                        Developer Laptop
+
+                    </h3>
+
+                    <ul>
+
+                        <li>Windows</li>
+
+                        <li>Node 22</li>
+
+                        <li>MongoDB 8</li>
+
+                        <li>Express</li>
+
+                        <li>React</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="arrow">
+
+                    ❌
+
+                </div>
+
+                <div class="box">
+
+                    <h3>
+
+                        Production Server
+
+                    </h3>
+
+                    <ul>
+
+                        <li>Ubuntu</li>
+
+                        <li>Node 18</li>
+
+                        <li>MongoDB 6</li>
+
+                        <li>Missing Package</li>
+
+                        <li>Application Crash</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <br><br>
+
+            <center style="font-size:45px;font-weight:bold;color:#2563eb;">
+
+                ↓
+
+            </center>
+
+            <br>
+
+            <div class="story">
+
+                <div class="box">
+
+                    <h3>
+
+                        Docker Container
+
+                    </h3>
+
+                    <ul>
+
+                        <li>Node</li>
+
+                        <li>Express</li>
+
+                        <li>MongoDB Driver</li>
+
+                        <li>Libraries</li>
+
+                        <li>Everything Packed</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="arrow">
+
+                    🚀
+
+                </div>
+
+                <div class="box">
+
+                    <h3>
+
+                        Production Server
+
+                    </h3>
+
+                    <ul>
+
+                        <li>Run Same Container</li>
+
+                        <li>No Missing Packages</li>
+
+                        <li>No Version Conflict</li>
+
+                        <li>Works Everywhere ✅</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <div class="tip">
+
+                <b>Simple Definition</b>
+
+                Docker packages your application together with all the software it needs.
+
+                Now your project behaves exactly the same on every computer.
+
+            </div>
+
+            <div class="card-grid">
+
+                <div class="card">
+
+                    <h3>
+
+                        🎮 Game Analogy
+
+                    </h3>
+
+                    <p>
+
+                        Instead of carrying individual game files,
+
+                        you carry the entire installed game folder.
+
+                        It runs exactly the same everywhere.
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>
+
+                        📦 Courier Analogy
+
+                    </h3>
+
+                    <p>
+
+                        Rather than sending items separately,
+
+                        Docker packs everything inside one sealed box.
+
+                        Nothing gets lost.
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>
+
+                        ☕ Coffee Analogy
+
+                    </h3>
+
+                    <p>
+
+                        A coffee recipe gives instructions.
+
+                        A prepared coffee is ready to drink.
+
+                        Docker Image = Recipe
+
+                        Container = Coffee
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================
+PART 3 - Paste before <footer>
+=========================== -->
+
+    <section id="vm-container" class="fade">
+        <div class="container">
+            <div class="badge">SECTION 7</div>
+            <h2>🖥️ Virtual Machine vs Docker Container</h2>
+            <p>Both isolate applications, but Docker Containers are lightweight because they share the host OS kernel.
+            </p>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Virtual Machine</h3>
+                    <ul>
+                        <li>Includes complete OS</li>
+                        <li>Heavy (GBs)</li>
+                        <li>Slow startup</li>
+                        <li>More RAM usage</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Docker Container</h3>
+                    <ul>
+                        <li>Shares Host OS</li>
+                        <li>Lightweight (MBs)</li>
+                        <li>Starts in seconds</li>
+                        <li>Efficient</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tip">
+                <b>Easy Memory Trick</b><br>
+                VM = Complete House 🏠<br>
+                Container = Apartment 🏢
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="fade">
+        <div class="container">
+            <div class="badge">SECTION 8</div>
+            <h2>🏗 Docker Architecture</h2>
+
+            <div class="details">
+                <pre>
+          Docker Hub
+               │
+         Pull Image
+               │
+               ▼
+        Docker Engine
+        ┌──────┴──────┐
+        │             │
+   Container A   Container B
+     Node App      MongoDB
+      </pre>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Docker Client</h3>
+                    <p>Accepts docker commands.</p>
+                </div>
+                <div class="card">
+                    <h3>Docker Engine</h3>
+                    <p>Creates and manages containers.</p>
+                </div>
+                <div class="card">
+                    <h3>Docker Hub</h3>
+                    <p>Cloud repository for Docker Images.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    ```html
+    <!-- ===========================================
+SECTION 9 - IMAGE vs CONTAINER
+=========================================== -->
+
+    <section id="images" class="fade">
+
+        <div class="container">
+
+            <div class="badge">
+                SECTION 9
+            </div>
+
+            <h2>📦 Docker Image vs Docker Container</h2>
+
+            <img src="./1_iMBaWHvUPCHHa3OMHx0Q4w.png">
+
+            <p>
+
+                One of the most confusing Docker concepts is understanding the difference
+                between an <b>Image</b> and a <b>Container</b>.
+
+                Don't memorize the definitions.
+
+                Understand the journey.
+
+            </p>
+
+            <div class="details">
+
+                <h3>Step 1️⃣ Build an Image</h3>
+
+                <p>
+
+                    A Docker Image is like a snapshot of your application.
+
+                    It contains everything your application needs to run.
+
+                </p>
+
+                <div class="terminal">
+
+                    Node.js
+
+                    Express
+
+                    Source Code
+
+                    node_modules
+
+                    Environment
+
+                    Everything Required
+
+                </div>
+
+                <div class="tip">
+
+                    📸 Think of an Image as a photograph.
+
+                    Everything is captured inside it,
+                    but it isn't running yet.
+
+                </div>
+
+            </div>
+
+            <br>
+
+<b>Docker Image is an executable files. Inside it there are instructions how the containers will make.</b>
+            <div class="tip">
+
+                Image = Blueprint
+
+                Image = Template
+
+                Image = Snapshot
+
+                Image = Package
+
+            </div>
+
+            <br>
+
+            <div class="tip">
+
+                A Container is your application that is actually running.
+
+                Unlike an Image, it can execute code, receive requests and store temporary data.
+
+            </div>
+
+
+
+
+
+            <h3 style="margin-top:50px;">
+
+                🍕 Pizza Analogy
+
+            </h3>
+
+            <div class="details">
+
+                <pre>
+
+Recipe
+
+      │
+
+      ▼
+
+Bake Pizza
+
+      │
+
+      ▼
+
+Cooked Pizza
+
+      │
+
+      ▼
+
+Pizza On Your Table
+
+</pre>
+
+            </div>
+
+            <div class="card-grid">
+
+                <div class="card">
+
+                    <h3>📄 Recipe</h3>
+
+                    <p>
+
+                        Dockerfile
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>📦 Cooked Pizza</h3>
+
+                    <p>
+
+                        Docker Image
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>🍕 Pizza On Table</h3>
+
+                    <p>
+
+                        Docker Container
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+
+
+            <h3 style="margin-top:60px;">
+
+                🚀 One Image Can Create Multiple Containers
+
+            </h3>
+
+            <p>
+
+                This is one of the most important interview concepts.
+
+            </p>
+
+            <div class="details">
+
+                <pre>
+
+Docker Image
+
+      │
+
+      ├────────────► Container 1
+
+      │
+
+      ├────────────► Container 2
+
+      │
+
+      ├────────────► Container 3
+
+      │
+
+      └────────────► Container 4
+
+</pre>
+
+            </div>
+
+            <div class="terminal">
+
+                docker run secure-contact-backend
+
+            </div>
+
+            ↓
+
+            <div class="terminal">
+
+                Container A
+
+            </div>
+
+            <br>
+
+            Run the same command again
+
+            <div class="terminal">
+
+                docker run secure-contact-backend
+
+            </div>
+
+            ↓
+
+            <div class="terminal">
+
+                Container B
+
+            </div>
+
+            <div class="tip">
+
+              <b>  Exactly like one Android APK can be installed
+                on many different phones.
+
+                APK = Image
+
+                Installed App = Container
+                </b>
+
+            </div>
+
+
+
+
+
+            <h3 style="margin-top:60px;">
+
+                📊 Image vs Container
+
+            </h3>
+
+            <table class="docker-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Docker Image</th>
+
+                        <th>Docker Container</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Blueprint</td>
+
+                        <td>Running Application</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Read Only</td>
+
+                        <td>Read & Write</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Built using Dockerfile</td>
+
+                        <td>Created from Image</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>docker build</td>
+
+                        <td>docker run / docker compose up</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>docker images</td>
+
+                        <td>docker ps</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>One Image → Many Containers</td>
+
+                        <td>Runs One Instance</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+
+
+
+
+            <h3 style="margin-top:60px;">
+
+                📌 Complete Lifecycle
+
+            </h3>
+
+            <div class="details">
+
+               <img src="./Gemini_Generated_Image_5ux52d5ux52d5ux5.png">
+
+            </div>
+
+            <div class="tip">
+
+                <b>Remember This Forever</b>
+
+                Dockerfile → Instructions
+
+                Docker Image → Packaged Application
+
+                Docker Container → Running Application
+
+                Once you understand this flow,
+
+                Docker becomes much easier.
+
+            </div>
+
+        </div>
+
+    </section>
+    ```
+
+
+    <section id="commands" class="fade">
+        <div class="container">
+            <div class="badge">SECTION 10</div>
+            <h2>💻 Most Useful Docker Commands</h2>
+
+            <div class="terminal">
+                docker --version
+
+                docker images
+
+                docker ps
+
+                docker ps -a
+
+                docker pull nginx
+
+                docker run nginx
+
+                docker stop container_id
+
+                docker rm container_id
+
+                docker exec -it container_id bash
+
+                docker logs container_id
+            </div>
+
+            <div class="tip">
+                <b>Remember:</b><br>
+                pull → download image<br>
+                run → create container<br>
+                ps → running containers<br>
+                logs → application logs
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- ===========================================
+SECTION 11 - DOCKERFILE
+=========================================== -->
+
+    <section id="dockerfile" class="fade">
+
+        <div class="container">
+
+            <div class="badge">
+                SECTION 11
+            </div>
+
+            <h2>📝 Dockerfile</h2>
+
+            <p>
+                A <b>Dockerfile</b> is simply a text file that contains instructions to build a Docker Image.
+                Instead of manually installing Node.js, dependencies, and copying files every time,
+                Docker automates everything.
+            </p>
+
+            <div class="tip">
+                💡 <b>Think of a Dockerfile as a Recipe.</b><br><br>
+
+                Recipe ➜ Instructions<br>
+                Cake ➜ Final Product
+
+                <br><br>
+
+                Dockerfile ➜ Instructions<br>
+                Docker Image ➜ Final Product
+            </div>
+
+            <div class="terminal">
+
+                FROM node:22
+
+                WORKDIR /app
+
+                COPY package*.json .
+
+                RUN npm install
+
+                COPY . .
+
+                EXPOSE 5000
+
+                CMD ["npm","start"]
+
+            </div>
+
+            <br>
+
+            <h3>Line by Line Explanation</h3>
+
+            <div class="card-grid">
+
+                <div class="card">
+                    <h3>FROM</h3>
+                    <p>Selects the base image.</p>
+                    <p><b>Example:</b> Node.js 22</p>
+                </div>
+
+                <div class="card">
+                    <h3>WORKDIR</h3>
+                    <p>Creates the working folder inside the container.</p>
+                </div>
+
+                <div class="card">
+                    <h3>COPY</h3>
+                    <p>Copies project files from your laptop into the container.</p>
+                </div>
+
+                <div class="card">
+                    <h3>RUN</h3>
+                    <p>Executes commands while building the image.</p>
+                </div>
+
+                <div class="card">
+                    <h3>EXPOSE</h3>
+                    <p>Tells Docker which port your application uses.</p>
+                </div>
+
+                <div class="card">
+                    <h3>CMD</h3>
+                    <p>Starts your application when the container runs.</p>
+                </div>
+
+            </div>
+
+            <div class="details">
+
+                <h3>Build Process</h3>
+
+                <pre>
+
+Dockerfile
+      │
+      ▼
+docker build
+      │
+      ▼
+Docker Image
+      │
+docker run
+      │
+      ▼
+Running Container
+
+</pre>
+
+            </div>
+
+
+
+        </div>
+
+    </section>
+
+
+
+
+
+    <!-- ===========================================
+SECTION 12 - DOCKER COMPOSE
+=========================================== -->
+
+    <section id="compose" class="fade">
+
+        <div class="container">
+
+            <div class="badge">
+                SECTION 12
+            </div>
+
+            <h2>🐳 Docker Compose</h2>
+
+            <p>
+
+                Imagine your MERN application has
+
+            </p>
+
+            <ul>
+
+                <li>React Frontend</li>
+
+                <li>Node Backend</li>
+
+                <li>MongoDB</li>
+
+                <li>Redis</li>
+
+            </ul>
+
+            <p>
+
+                Running every container one by one becomes difficult.
+
+                Docker Compose solves this problem.
+
+            </p>
+
+            <div class="tip">
+
+                Docker Compose lets you start multiple containers using
+                <b>just one command.</b>
+
+            </div>
+
+            <div class="terminal">
+
+                docker compose up
+
+            </div>
+
+            <br>
+
+            <h3>docker-compose.yml</h3>
+
+            <div class="terminal">
+
+                version: "3"
+
+                services:
+
+                backend:
+
+                image: node
+
+                ports:
+
+                - "5000:5000"
+
+                mongodb:
+
+                image: mongo
+
+                ports:
+
+                - "27017:27017"
+
+            </div>
+
+            <div class="details">
+
+                <h3>Workflow</h3>
+
+                <pre>
+
+docker-compose.yml
+
+        │
+
+        ▼
+
+docker compose up
+
+        │
+
+        ▼
+
+Frontend Container
+
+Backend Container
+
+MongoDB Container
+
+        │
+
+        ▼
+
+Everything Starts Together 🚀
+
+</pre>
+
+            </div>
+
+            <div class="card-grid">
+
+                <div class="card">
+
+                    <h3>Why Compose?</h3>
+
+                    <ul>
+
+                        <li>No multiple commands</li>
+
+                        <li>Easy setup</li>
+
+                        <li>Perfect for MERN Projects</li>
+
+                        <li>One configuration file</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Useful Commands</h3>
+
+                    <pre>
+
+docker compose up
+
+docker compose down
+
+docker compose ps
+
+docker compose logs
+
+</pre>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Real Example</h3>
+
+                    <p>
+
+                        Companies usually separate
+
+                        Frontend
+
+                        Backend
+
+                        Database
+
+                        Redis
+
+                        Nginx
+
+                        into different containers and start them together using Docker Compose.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="tip">
+
+                <b>Remember</b>
+
+                Dockerfile → Builds one image.
+
+                Docker Compose → Runs multiple containers together.
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+    <!-- =====================================================
+SECTION 13 - DOCKER VOLUMES
+===================================================== -->
+
+    <section id="volumes" class="fade">
+
+        <div class="container">
+
+            <div class="badge">
+                SECTION 13
+            </div>
+
+            <h2>💾 Docker Volumes</h2>
+
+            <p>
+
+                Imagine you stored all your college assignments inside your laptop.
+
+                Now suddenly your laptop crashes.
+
+                😢 Everything is gone.
+
+                Containers behave exactly the same.
+
+                When a container is deleted,
+                its data is also deleted.
+
+                Docker Volumes solve this problem.
+
+            </p>
+
+            <div class="tip">
+
+                <b>Simple Definition</b>
+
+                A Docker Volume stores your data **outside the container**, so even if the container is deleted,
+                your data remains safe.
+
+            </div>
+
+            <div class="details">
+
+                <h3>Without Volume</h3>
+
+                <pre>
+
+Container
+
+┌────────────────────┐
+│  MongoDB           │
+│                    │
+│  Student Data      │
+│                    │
+└────────────────────┘
+
+docker rm
+
+❌ Everything Lost
+
+</pre>
+
+            </div>
+
+            <br>
+
+            <div class="details">
+
+                <h3>With Docker Volume</h3>
+
+                <pre>
+
+             Docker Volume
+          ┌───────────────┐
+          │ Student Data  │
+          └──────┬────────┘
+                 │
+        ┌────────▼────────┐
+        │    MongoDB      │
+        │   Container     │
+        └─────────────────┘
+
+docker rm
+
+Container Deleted
+
+✅ Data Still Safe
+
+</pre>
+
+            </div>
+
+            <div class="card-grid">
+
+                <div class="card">
+
+                    <h3>
+                        🏦 Bank Locker
+                    </h3>
+
+                    <p>
+
+                        Money is not kept in your pocket forever.
+
+                        You keep it safely inside a locker.
+
+                        Docker Volume works the same way.
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>
+                        📸 Google Photos
+                    </h3>
+
+                    <p>
+
+                        Even if your phone breaks,
+
+                        your photos are safe because they're stored elsewhere.
+
+                        Docker Volume follows the same idea.
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>
+                        💡 Real Use Case
+                    </h3>
+
+                    <p>
+
+                        MongoDB
+
+                        MySQL
+
+                        PostgreSQL
+
+                        Redis
+
+                        All databases should use Volumes.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="terminal">
+
+                docker volume create mydata
+
+                docker volume ls
+
+                docker volume inspect mydata
+
+                docker volume rm mydata
+
+            </div>
+
+            <div class="tip">
+
+                Always use Volumes for databases.
+
+                Never store database files only inside containers.
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+
+    <!-- =====================================================
+SECTION 14 - DOCKER NETWORKS
+===================================================== -->
+
+    <section id="networks" class="fade">
+
+        <div class="container">
+
+            <div class="badge">
+
+                SECTION 14
+
+            </div>
+
+            <h2>
+
+                🌐 Docker Networks
+
+            </h2>
+
+            <p>
+
+                Containers cannot magically communicate.
+
+                Docker Network allows containers
+                to talk to each other securely.
+
+            </p>
+
+            <div class="details">
+
+                <h3>
+
+                    Without Network
+
+                </h3>
+
+                <pre>
+
+Frontend
+
+     ❌
+
+Backend
+
+     ❌
+
+MongoDB
+
+No Communication
+
+</pre>
+
+            </div>
+
+            <br>
+
+            <div class="details">
+
+                <h3>
+
+                    With Docker Network
+
+                </h3>
+
+                <pre>
+
+          Docker Network
+
+      ┌──────────────┐
+
+Frontend ⇄ Backend ⇄ MongoDB
+
+      └──────────────┘
+
+All Containers Can Communicate
+
+</pre>
+
+            </div>
+
+            <div class="tip">
+
+                Think of Docker Network as a
+
+                Wi-Fi Router 📶
+
+                Everyone connected to the same Wi-Fi
+                can communicate.
+
+            </div>
+
+            <div class="card-grid">
+
+                <div class="card">
+
+                    <h3>
+
+                        Bridge Network
+
+                    </h3>
+
+                    <p>
+
+                        Default Network.
+
+                        Containers on the same machine communicate.
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>
+
+                        Host Network
+
+                    </h3>
+
+                    <p>
+
+                        Container shares Host Machine Network.
+
+                        Very Fast.
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>
+
+                        Overlay Network
+
+                    </h3>
+
+                    <p>
+
+                        Used in Docker Swarm.
+
+                        Containers communicate across multiple servers.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <h3 style="margin-top:40px;">
+
+                Common Commands
+
+            </h3>
+
+            <div class="terminal">
+
+                docker network ls
+
+                docker network create mynetwork
+
+                docker network inspect mynetwork
+
+                docker network rm mynetwork
+
+            </div>
+
+            <div class="tip">
+
+                Real Company Example
+
+                Frontend Container
+
+                ↓
+
+                Backend Container
+
+                ↓
+
+                Redis Container
+
+                ↓
+
+                MongoDB Container
+
+                All of them communicate through Docker Network.
+
+            </div>
+
+
+
+
+
+            <div class="details">
+
+                <h3>
+
+                    Complete MERN Architecture
+
+                </h3>
+
+                <pre>
+
+               Internet
+
+                   │
+
+             React Container
+
+                   │
+
+         Docker Bridge Network
+
+         ┌─────────┼─────────┐
+
+         │         │         │
+
+Backend   Redis   MongoDB
+
+Container Container Container
+
+</pre>
+
+            </div>
+
+            <div class="card-grid">
+
+                <div class="card">
+
+                    <h3>
+
+                        When to Use Volume?
+
+                    </h3>
+
+                    <p>
+
+                        When data should survive.
+
+                        Examples:
+
+                        MongoDB
+
+                        MySQL
+
+                        Redis
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>
+
+                        When to Use Network?
+
+                    </h3>
+
+                    <p>
+
+                        Whenever containers need to communicate.
+
+                        Frontend ↔ Backend
+
+                        Backend ↔ Database
+
+                        Backend ↔ Redis
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>
+
+                        Interview Tip
+
+                    </h3>
+
+                    <p>
+
+                        Volume stores Data.
+
+                        Network connects Containers.
+
+                        Students often confuse these two.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+    <footer>
+
+
+
+    </footer>
+
+    <script>
+        const info = {
+            plan: {
+                title: "Planning",
+                text: "Understand the business problem, collect requirements and decide project goals.",
+            },
+
+            design: {
+                title: "Design",
+                text: "Prepare UI, database design, APIs and architecture.",
+            },
+
+            develop: {
+                title: "Development",
+                text: "Developers write code, create Git branches, commit changes and raise Pull Requests.",
+            },
+
+            testing: {
+                title: "Testing",
+                text: "QA tests the application and reports bugs before release.",
+            },
+
+            deploy: {
+                title: "Deployment",
+                text: "Application is deployed to production using automated pipelines.",
+            },
+
+            maintain: {
+                title: "Maintenance",
+                text: "Monitor logs, fix bugs, improve performance and release updates.",
+            },
+        };
+
+        function changeInfo(stage) {
+            document.getElementById("details").innerHTML = `
+<h3>${info[stage].title}</h3>
+<p>${info[stage].text}</p>
+`;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("show");
+                }
+            });
+        });
+
+        document.querySelectorAll(".fade").forEach((section) => {
+            observer.observe(section);
+        });
+
+        // Add if not already present
+        document.querySelectorAll(".fade").forEach(el => {
+            if (!el.dataset.observed) {
+                el.dataset.observed = "1";
+                observer.observe(el);
+            }
+        });
+    </script>
+</body>
+
+</html>
